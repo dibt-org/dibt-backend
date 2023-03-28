@@ -10,4 +10,5 @@ public class Messages {
     public static final String ADDED = "added";
     public static final String LISTED = "listed";
 
+    public static final String VALIDATION_ERROR = "Validation Error";
 }
