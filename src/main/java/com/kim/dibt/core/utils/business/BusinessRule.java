@@ -1,9 +1,9 @@
 package com.kim.dibt.core.utils.business;
 
-import com.kim.dibt.core.utils.result.*;
+import com.kim.dibt.core.utils.result.Result;
 
 public class BusinessRule {
-    public static IResult run(IResult... logics) {
+    public static Result run(Result... logics) {
         for (var logic : logics) {
             if (!logic.isSuccess())
                 return logic;
