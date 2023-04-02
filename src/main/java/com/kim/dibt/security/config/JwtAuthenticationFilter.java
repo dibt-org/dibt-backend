@@ -63,5 +63,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-    //TODO: Add Response Entity for error handling when Resulting structure is complete
+
 }

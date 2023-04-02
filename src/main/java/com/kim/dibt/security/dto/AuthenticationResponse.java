@@ -1,4 +1,4 @@
-package com.kim.dibt.security.auth;
+package com.kim.dibt.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-
-  private String token;
+    private String accessToken;
 }

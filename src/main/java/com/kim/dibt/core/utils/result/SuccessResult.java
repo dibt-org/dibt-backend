@@ -18,4 +18,8 @@ public class SuccessResult extends Result {
     public SuccessResult() {
         super(true);
     }
+
+    public static SuccessResult of(String message) {
+        return new SuccessResult(message);
+    }
 }
