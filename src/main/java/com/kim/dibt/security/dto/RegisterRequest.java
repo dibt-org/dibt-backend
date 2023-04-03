@@ -1,9 +1,6 @@
-package com.kim.dibt.security.auth;
+package com.kim.dibt.security.dto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,14 +13,16 @@ import lombok.NoArgsConstructor;
 public class RegisterRequest {
     @NotNull
     @NotEmpty
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
 
     @NotNull
     @NotEmpty
-    @Size(min = 6, max = 12)
+    @Size(min = 6)
     private String password;
 
     @NotNull
     @NotEmpty
+    @Size(min = 2)
     private String username;
 }

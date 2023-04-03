@@ -1,4 +1,4 @@
-package com.kim.dibt.security.auth;
+package com.kim.dibt.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class LoginRequest {
     private String username;
     private String password;
 }

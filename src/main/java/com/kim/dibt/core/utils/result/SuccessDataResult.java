@@ -27,4 +27,8 @@ public class SuccessDataResult<T> extends DataResult<T> {
         super(null, true);
     }
 
+    public static <T> SuccessDataResult<T> of(T data, String message) {
+        return new SuccessDataResult<>(data, message);
+    }
+
 }

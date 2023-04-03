@@ -27,4 +27,8 @@ public class ErrorDataResult<T> extends DataResult<T> {
         super(null, false);
     }
 
+    public static <T> ErrorDataResult<T> of(T data, String message) {
+        return new ErrorDataResult<>(data, message);
+    }
+
 }

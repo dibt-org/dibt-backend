@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dibt-test
+    username: postgres
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  security:
+    filter:
+      enabled: true
+      whitelist: >
+        /api/v1/auth/**,
+        /api/v1/public/**,
+        /v3/api-docs/**,
+        /swagger-ui/**,
+        /v2/api-docs/**,
+        /swagger-resources/**
+
+
+jwt:
+  secret: 3F4428472B4B6250655368566D5970337336763979244226452948404D635166
+  expiration: 86400000
+
+
+

@@ -18,4 +18,8 @@ public class ErrorResult extends Result {
     public ErrorResult() {
         super(false);
     }
+
+    public static ErrorResult of(String message) {
+        return new ErrorResult(message);
+    }
 }

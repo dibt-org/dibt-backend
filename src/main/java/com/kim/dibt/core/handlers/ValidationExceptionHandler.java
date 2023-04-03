@@ -1,7 +1,7 @@
 package com.kim.dibt.core.handlers;
 
 import com.kim.dibt.core.models.ApiError;
-import com.kim.dibt.core.utils.constants.Messages;
+import com.kim.dibt.core.utils.constants.CoreConstants;
 import com.kim.dibt.core.utils.result.ErrorDataResult;
 import jakarta.annotation.Nonnull;
 import org.springframework.http.HttpHeaders;
@@ -18,12 +18,12 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@Nonnull MethodArgumentNotValidException ex, @Nonnull HttpHeaders headers, @Nonnull HttpStatusCode status, @Nonnull WebRequest request) {
         ApiError error = new ApiError();
-        error.setMessage(Messages.VALIDATION_ERROR);
-        error.setCode(status.toString());
+        error.setMessage(CoreConstants.VALIDATION_ERROR);
+        error.setCode(status.value());
         ex.getBindingResult().getFieldErrors().forEach(fieldError -> error.getErrors().put(fieldError.getField(), fieldError.getDefaultMessage()));
 
 
-        return new ResponseEntity<>(new ErrorDataResult<>(error, Messages.VALIDATION_ERROR), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorDataResult.of(error, CoreConstants.VALIDATION_ERROR), HttpStatus.BAD_REQUEST);
     }
 
 }
