@@ -1,5 +1,7 @@
 package com.kim.dibt.security.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import com.kim.dibt.core.utils.constants.CoreConstants;
 import com.kim.dibt.core.utils.result.DataResult;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -37,7 +41,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(new SuccessDataResult<>(service.login(request), CoreConstants.LOGIN_SUCCESS));
     }
 
-
+    @PostMapping("/refresh-token")
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        service.refreshToken(request, response);
+    }
 
 
 }
