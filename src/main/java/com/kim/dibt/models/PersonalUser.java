@@ -14,4 +14,5 @@ public class PersonalUser extends User {
     private String firstName;
     private String lastName;
 
+
 }
