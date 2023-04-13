@@ -6,6 +6,9 @@ public class CoreConstants {
     public static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
     public static final String USER_NOT_FOUND = "USER_NOT_FOUND";
     public static final String MISSING_TOKEN = "MISSING_TOKEN_OR_INVALID_TOKEN_FORMAT";
+    public static final String USERNAME_ALREADY_EXISTS = "USERNAME_ALREADY_EXISTS";
+    public static final String EMAIL_ALREADY_EXISTS = "EMAIL_ALREADY_EXISTS";
+    public static final String REGISTRATION_FAILED = "REGISTRATION_FAILED";
 
     // private constructor to prevent instantiation
     private CoreConstants() {

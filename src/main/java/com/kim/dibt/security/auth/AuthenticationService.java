@@ -2,6 +2,12 @@ package com.kim.dibt.security.auth;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kim.dibt.core.utils.business.BusinessRule;
+import com.kim.dibt.core.utils.business.CustomModelMapper;
+import com.kim.dibt.core.utils.constants.CoreConstants;
+import com.kim.dibt.core.utils.result.*;
+import com.kim.dibt.models.PersonalUser;
+import com.kim.dibt.repo.PersonalUserRepo;
 import com.kim.dibt.security.config.JwtService;
 import com.kim.dibt.security.dto.AuthenticationResponse;
 import com.kim.dibt.security.dto.LoginRequest;
@@ -32,21 +38,31 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PersonalUserRepo personalUserRepo;
+    private final CustomModelMapper modelMapper;
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .email(request.getEmail())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .build();
-        var savedUser = userRepository.save(user);
-        var accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+    public Result register(RegisterRequest request) {
+        var result = BusinessRule.run(
+                checkUsernameExists(request.getUsername()),
+                checkEmailExists(request.getEmail())
+        );
+        if (result != null) {
+            return result;
+        }
+        PersonalUser personalUser = modelMapper.of().map(request, PersonalUser.class);
+        personalUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        PersonalUser savedUser = personalUserRepo.save(personalUser);
+
+
+        var accessToken = jwtService.generateAccessToken(savedUser);
+        String refreshToken = jwtService.generateRefreshToken(savedUser);
         saveUserToken(savedUser, accessToken);
-        return AuthenticationResponse.builder()
+
+        AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+        return new SuccessDataResult<>(authenticationResponse, CoreConstants.REGISTRATION_SUCCESS);
     }
 
     public AuthenticationResponse login(LoginRequest request) {
@@ -112,4 +128,19 @@ public class AuthenticationService {
             }
         }
     }
+
+    private Result checkUsernameExists(String username) {
+        var user = userRepository.findByUsername(username);
+        if (user.isPresent())
+            return ErrorResult.of(CoreConstants.USERNAME_ALREADY_EXISTS);
+        return SuccessResult.of(CoreConstants.NOT_FOUND);
+    }
+
+    private Result checkEmailExists(String email) {
+        var user = userRepository.findByEmail(email);
+        if (user.isPresent())
+            return ErrorResult.of(CoreConstants.EMAIL_ALREADY_EXISTS);
+        return SuccessResult.of(CoreConstants.NOT_FOUND);
+    }
+
 }
