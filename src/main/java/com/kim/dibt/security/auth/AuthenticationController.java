@@ -1,5 +1,6 @@
 package com.kim.dibt.security.auth;
 
+import com.kim.dibt.core.utils.result.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,11 +27,13 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<DataResult<AuthenticationResponse>> register(
+    public ResponseEntity<Result> register(
             @RequestBody @Valid RegisterRequest request
     ) {
-        AuthenticationResponse register = service.register(request);
-        SuccessDataResult<AuthenticationResponse> result = new SuccessDataResult<>(register, CoreConstants.REGISTRATION_SUCCESS);
+        var result = service.register(request);
+        if (!result.isSuccess()) {
+            return ResponseEntity.badRequest().body(result);
+        }
         return ResponseEntity.ok(result);
     }
 

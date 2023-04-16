@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+
     @NotNull
     @NotEmpty
     @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
@@ -18,11 +19,13 @@ public class RegisterRequest {
 
     @NotNull
     @NotEmpty
-    @Size(min = 6)
-    private String password;
+    @Size(min = 2)
+    private String username;
 
     @NotNull
     @NotEmpty
-    @Size(min = 2)
-    private String username;
+    @Size(min = 6)
+    private String password;
+
+
 }

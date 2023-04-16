@@ -1,6 +1,7 @@
 package com.kim.dibt.security.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.kim.dibt.core.models.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -22,7 +23,7 @@ import java.util.Objects;
 @Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User implements UserDetails {
+public class User extends Auditable implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<Token> tokens;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

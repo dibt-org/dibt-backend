@@ -22,4 +22,8 @@ public class SuccessResult extends Result {
     public static SuccessResult of(String message) {
         return new SuccessResult(message);
     }
+
+    public static Result of() {
+        return new SuccessResult();
+    }
 }
