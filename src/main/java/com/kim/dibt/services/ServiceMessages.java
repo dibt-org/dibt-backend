@@ -1,6 +1,9 @@
 package com.kim.dibt.services;
 
 public class ServiceMessages {
+    public static final String IMAGE_UPLOAD_SUCCESS = "IMAGE_UPLOAD_SUCCESS";
+    public static final String IMAGE_UPLOAD_ERROR = "IMAGE_UPLOAD_ERROR";
+
     private ServiceMessages() {
     }
 
