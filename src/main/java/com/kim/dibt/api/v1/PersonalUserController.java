@@ -1,4 +1,4 @@
-package com.kim.dibt.api;
+package com.kim.dibt.api.v1;
 
 import com.kim.dibt.core.utils.result.DataResult;
 import com.kim.dibt.core.utils.result.Result;

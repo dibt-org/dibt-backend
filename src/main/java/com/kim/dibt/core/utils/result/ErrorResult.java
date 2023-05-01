@@ -22,4 +22,8 @@ public class ErrorResult extends Result {
     public static ErrorResult of(String message) {
         return new ErrorResult(message);
     }
+
+    public static ErrorResult of() {
+        return new ErrorResult();
+    }
 }

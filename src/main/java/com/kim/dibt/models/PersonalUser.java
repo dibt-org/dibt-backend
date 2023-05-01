@@ -21,5 +21,4 @@ public class PersonalUser extends User {
     private String nationalityId;
     private String birthDate;
 
-
 }
