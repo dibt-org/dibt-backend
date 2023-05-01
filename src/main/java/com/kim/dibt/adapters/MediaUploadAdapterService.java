@@ -7,7 +7,6 @@ import java.util.Map;
 
 
 public interface MediaUploadAdapterService {
-
     DataResult<Map<?, ?>> uploadImage(MultipartFile image);
 
 }

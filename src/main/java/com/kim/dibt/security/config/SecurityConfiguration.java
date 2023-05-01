@@ -2,6 +2,7 @@ package com.kim.dibt.security.config;
 
 import com.kim.dibt.security.handlers.CustomAccessDeniedExceptionHandler;
 import com.kim.dibt.security.handlers.CustomAuthenticationFailureHandler;
+import com.kim.dibt.security.models.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +40,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(whitelist).permitAll()
-                .requestMatchers("/api/v1/demo/**").hasAnyAuthority("ADMIN")
+                .requestMatchers("/api/v1/demo/**", "/api/v1/user/add-role-to-user/**").hasAnyAuthority(RoleType.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
