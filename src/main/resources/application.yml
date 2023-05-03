@@ -7,9 +7,9 @@ spring:
       ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/dibt-test
-    username: postgres
-    password: 12345
+    url: jdbc:postgresql://ec2-44-213-151-75.compute-1.amazonaws.com:5432/d1es3jttn9i6dp
+    username: piprnsdckrgotf
+    password: 47193a634bd00b1855fa1ee5e35f325619a8758cc5f4a3c43736213a03d659f5
     driver-class-name: org.postgresql.Driver
   security:
     filter:
@@ -29,6 +29,7 @@ jwt:
   refresh:
     expiration: 604800000 # 7 days
 
+
 cors:
     allowed-origins: >
         http://localhost:3000,
@@ -39,6 +40,7 @@ cors:
     exposed-headers: "Authorization,Link,X-Total-Count"
     allow-credentials: true
     max-age: 1800
+
 
 cloudinary:
   api-key: 123456789012345
