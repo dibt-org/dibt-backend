@@ -30,5 +30,8 @@ public class SuccessDataResult<T> extends DataResult<T> {
     public static <T> SuccessDataResult<T> of(T data, String message) {
         return new SuccessDataResult<>(data, message);
     }
+    public static <T> SuccessDataResult<T> of(T data) {
+        return new SuccessDataResult<>(data);
+    }
 
 }

@@ -29,9 +29,21 @@ jwt:
   refresh:
     expiration: 604800000 # 7 days
 
-cloudinary:
-  cloud-name: ddd
-  api-key: 111
-  api-secret: 222
 
+cors:
+    allowed-origins: >
+        http://localhost:3000,
+        http://localhost:8080,
+        http://localhost:4200,
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+
+
+cloudinary:
+  api-key: 123456789012345
+  api-secret: 1234567890123456789012345678901234567890
+  cloud-name: dibt-test
 

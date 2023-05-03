@@ -16,9 +16,11 @@ import lombok.Setter;
 public class AddPersonalUser {
     @NotNull
     @Size(min = 2)
+    @Pattern(regexp = "^[a-zA-Z]*$", message = "Only letters are allowed")
     private String firstName;
     @NotNull
     @Size(min = 2)
+    @Pattern(regexp = "^[a-zA-Z]*$", message = "Only letters are allowed")
     private String lastName;
     @NotNull
     @Size(min = 11, max = 11)

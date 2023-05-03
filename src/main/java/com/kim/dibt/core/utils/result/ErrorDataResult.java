@@ -31,4 +31,8 @@ public class ErrorDataResult<T> extends DataResult<T> {
         return new ErrorDataResult<>(data, message);
     }
 
+    public static <T> ErrorDataResult<T> of(T data) {
+        return new ErrorDataResult<>(data);
+    }
+
 }
