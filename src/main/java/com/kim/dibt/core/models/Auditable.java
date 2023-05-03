@@ -40,7 +40,7 @@ public class Auditable {
     @LastModifiedBy
     private String lastModifiedBy;
 
-    private boolean isDeleted;
+    private Boolean isDeleted = Boolean.FALSE;
     private Date deletedDate;
 
     @PrePersist
@@ -53,5 +53,9 @@ public class Auditable {
         lastModifiedDate = new Date();
     }
 
+    @PreRemove
+    protected void onDelete() {
+        deletedDate = new Date();
+    }
 
 }

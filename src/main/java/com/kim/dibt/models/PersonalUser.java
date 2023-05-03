@@ -2,6 +2,7 @@ package com.kim.dibt.models;
 
 import com.kim.dibt.security.models.User;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

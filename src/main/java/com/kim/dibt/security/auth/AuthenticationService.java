@@ -49,7 +49,7 @@ public class AuthenticationService {
         if (result != null) {
             return result;
         }
-        PersonalUser personalUser = modelMapper.of().map(request, PersonalUser.class);
+        PersonalUser personalUser = modelMapper.ofStandard().map(request, PersonalUser.class);
         personalUser.setPassword(passwordEncoder.encode(request.getPassword()));
         PersonalUser savedUser = personalUserRepo.save(personalUser);
 
@@ -83,28 +83,6 @@ public class AuthenticationService {
                 .build();
     }
 
-    private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
-        tokenRepository.save(token);
-    }
-
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
-    }
-
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
@@ -127,6 +105,41 @@ public class AuthenticationService {
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
+    }
+
+    public Result changePassword(String oldPassword, String newPassword, HttpServletRequest request) {
+        String username = jwtService.extractUsername(request.getHeader(HttpHeaders.AUTHORIZATION).substring(7));
+        var user = userRepository.findByUsername(username).orElse(null);
+        if (user == null)
+            return ErrorResult.of(CoreConstants.AUTHENTICATION_FAILED);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword()))
+            return ErrorResult.of(CoreConstants.WRONG_PASSWORD);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        revokeAllUserTokens(user);
+        return SuccessResult.of(CoreConstants.PASSWORD_CHANGED);
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
     }
 
     private Result checkUsernameExists(String username) {

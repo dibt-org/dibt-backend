@@ -11,7 +11,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "corprate_users")
+@Table(name = "corporate_users")
 @RequiredArgsConstructor
 @Getter
 @Setter

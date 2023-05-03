@@ -50,5 +50,17 @@ public class AuthenticationController {
         service.refreshToken(request, response);
     }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<Result> changePassword(
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword,
+            HttpServletRequest request
+    ) {
+        var result = service.changePassword(oldPassword, newPassword, request);
+        if (!result.isSuccess()) {
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
 
 }

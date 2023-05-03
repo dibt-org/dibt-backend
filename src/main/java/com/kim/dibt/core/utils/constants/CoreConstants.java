@@ -30,6 +30,8 @@ public class CoreConstants {
     public static final String ACCESS_DENIED = "ACCESS_DENIED";
     public static final String ROLE_NOT_FOUND = "ROLE_NOT_FOUND";
     public static final String USER_ALREADY_HAS_ROLE = "USER_ALREADY_HAS_ROLE";
+    public static final String WRONG_PASSWORD = "WRONG_PASSWORD";
+    public static final String PASSWORD_CHANGED = "PASSWORD_CHANGED";
 
     // private constructor to prevent instantiation
     private CoreConstants() {

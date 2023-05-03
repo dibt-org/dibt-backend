@@ -10,6 +10,7 @@ import com.kim.dibt.services.ServiceMessages;
 import com.kim.dibt.services.personaluser.dtos.AddPersonalUser;
 import com.kim.dibt.services.personaluser.dtos.AddedPersonalUser;
 import com.kim.dibt.services.personaluser.dtos.UpdatePersonalUser;
+import com.kim.dibt.services.personaluser.dtos.UpdatedPersonalUser;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class PersonalUserManager implements PersonalUserService {
         }
         modelMapper.ofStrict().map(addPersonalUser, personalUser);
         PersonalUser savedPersonalUser = personalUserRepo.save(personalUser);
-        AddedPersonalUser addedPersonalUser = modelMapper.of().map(savedPersonalUser, AddedPersonalUser.class);
+        AddedPersonalUser addedPersonalUser = modelMapper.ofStandard().map(savedPersonalUser, AddedPersonalUser.class);
         return SuccessDataResult.of(addedPersonalUser, ServiceMessages.PERSONAL_USER_ADDED);
 
     }
@@ -50,13 +51,17 @@ public class PersonalUserManager implements PersonalUserService {
             long userId,
             HttpServletRequest request
     ) {
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader("Authorization").substring(7);
         String username = jwtService.extractUsername(token);
         Optional<PersonalUser> personalUser = personalUserRepo.findByUsername(username);
         if (personalUser.isEmpty() || personalUser.get().getId() != userId) {
             return ErrorDataResult.of(null, ServiceMessages.USER_NOT_FOUND);
         }
-        return null;
+        modelMapper.ofStrict().map(updatePersonalUser, personalUser.get());
+        log.debug("personalUser: {}", personalUser.get());
+        PersonalUser user = personalUserRepo.save(personalUser.get());
+        UpdatedPersonalUser updatedPersonalUser = modelMapper.ofStandard().map(user, UpdatedPersonalUser.class);
+        return SuccessDataResult.of(updatedPersonalUser, ServiceMessages.PERSONAL_USER_UPDATED);
 
 
     }
@@ -72,6 +77,7 @@ public class PersonalUserManager implements PersonalUserService {
         }
         return SuccessResult.of();
     }
+
     private PersonalUser findUserByToken(String token) {
         token = token.substring(7);
         String username = jwtService.extractUsername(token);
