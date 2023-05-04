@@ -45,6 +45,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(new SuccessDataResult<>(service.login(request), CoreConstants.LOGIN_SUCCESS));
     }
 
+    @PostMapping("/logout")
+    public void logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        // TODO document why this method is empty
+    }
+
     @PostMapping("/refresh-token")
     public void refreshToken(
             HttpServletRequest request,

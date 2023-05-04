@@ -17,6 +17,7 @@ import java.io.IOException;
 @Component
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     private final ObjectMapper jsonMapper;
+
     @Override
     public void onLogoutSuccess(
             HttpServletRequest request,
@@ -25,6 +26,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         SecurityContextHolder.clearContext();
         response.setStatus(HttpServletResponse.SC_OK);
         SuccessResult result = SuccessResult.of(CoreConstants.LOGOUT_SUCCESS);
+        response.setContentType("application/json");
         response.getWriter().write(jsonMapper.writeValueAsString(result));
     }
 }
