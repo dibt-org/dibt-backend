@@ -3,6 +3,7 @@ package com.kim.dibt.security.handlers;
 
 import com.kim.dibt.core.utils.constants.CoreConstants;
 import com.kim.dibt.core.utils.result.ErrorResult;
+import com.kim.dibt.exceptions.CustomRuntimeException;
 import com.kim.dibt.security.repo.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class CustomLogoutHandler implements LogoutHandler {
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
-    )  {
+    ) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -50,6 +51,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         try {
             response.getWriter().write(result.toString());
+            throw new CustomRuntimeException(CoreConstants.INVALID_TOKEN);
         } catch (IOException e) {
             e.printStackTrace();
         }
