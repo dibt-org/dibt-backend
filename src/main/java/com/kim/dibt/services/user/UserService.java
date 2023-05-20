@@ -8,4 +8,6 @@ import com.kim.dibt.security.models.User;
 public interface UserService {
     DataResult<User> getUserById(long id);
     Result addRoleToUser(Long userId, RoleType roleType);
+
+    DataResult<User> findByUsername(String username);
 }

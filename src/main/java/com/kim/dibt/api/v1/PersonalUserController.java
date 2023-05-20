@@ -27,7 +27,6 @@ public class PersonalUserController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    //TODO this method not tested it will be updated
     @PatchMapping("/{userId}")
     public ResponseEntity<Result> updatePersonalUser(
             @RequestBody @Valid UpdatePersonalUser updatePersonalUser,
@@ -39,4 +38,5 @@ public class PersonalUserController {
         }
         return ResponseEntity.badRequest().body(result);
     }
+
 }
