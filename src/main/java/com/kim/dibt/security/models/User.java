@@ -1,17 +1,19 @@
 package com.kim.dibt.security.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.kim.dibt.core.models.Auditable;
+import com.kim.dibt.models.Post;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -19,10 +21,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Inheritance(strategy = InheritanceType.JOINED)
+@SQLDelete(sql = "UPDATE users SET deleted = true,deleted_date = CURRENT_TIMESTAMP WHERE id = ?")
+@FilterDef(name = "deletedUserFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "deletedUserFilter", condition = "deleted = :isDeleted")
+@Where(clause = "deleted = false")
 public class User extends Auditable implements UserDetails {
 
     @Id
@@ -38,7 +45,12 @@ public class User extends Auditable implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
+    @JsonSerialize
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Post> posts;
 
 
     @Override
@@ -76,16 +88,5 @@ public class User extends Auditable implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return Objects.equals(getId(), user.getId());
-    }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

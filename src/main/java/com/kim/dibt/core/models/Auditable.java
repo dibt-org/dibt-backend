@@ -26,22 +26,23 @@ public class Auditable {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, nullable = false)
-    private Date createdDate;
+    protected Date createdDate;
 
     @CreatedBy
-    private String createdBy;
+    protected String createdBy;
 
 
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     @Column(nullable = false)
-    private Date lastModifiedDate;
+    protected Date lastModifiedDate;
 
     @LastModifiedBy
-    private String lastModifiedBy;
+    protected String lastModifiedBy;
 
-    private Boolean isDeleted = Boolean.FALSE;
-    private Date deletedDate;
+    protected boolean deleted = Boolean.FALSE;
+    protected Date deletedDate;
+
 
     @PrePersist
     protected void onCreate() {
@@ -53,9 +54,5 @@ public class Auditable {
         lastModifiedDate = new Date();
     }
 
-    @PreRemove
-    protected void onDelete() {
-        deletedDate = new Date();
-    }
 
 }

@@ -27,7 +27,7 @@ public class UserManager implements UserService {
         return SuccessDataResult.of(user, ServiceMessages.USER_FOUND);
     }
 
-
+    @Override
     public Result addRoleToUser(Long userId, RoleType roleType) {
         var result = BusinessRule.run(
                 checkRoleExists(roleType),
@@ -45,6 +45,15 @@ public class UserManager implements UserService {
         user.getRoles().add(role);
         userRepository.save(user);
         return SuccessResult.of(ServiceMessages.ROLE_ADDED_TO_USER);
+    }
+
+    @Override
+    public DataResult<User> findByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ErrorDataResult.of(null, ServiceMessages.USER_NOT_FOUND);
+        }
+        return SuccessDataResult.of(user, ServiceMessages.USER_FOUND);
     }
 
     private Result checkRoleExists(RoleType roleType) {

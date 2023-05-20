@@ -11,7 +11,13 @@ public class ServiceMessages {
     public static final String PERSONAL_USER_ADDED = "PERSONAL_USER_ADDED";
     public static final String USER_FOUND = "USER_FOUND";
     public static final String NATIONAL_ID_ALREADY_TAKEN = "NATIONAL_ID_ALREADY_TAKEN";
+    public static final String POST_LISTED = "POST_LISTED";
+    public static final String POST_ADDED = "POST_ADDED";
+    public static final String POST_NOT_FOUND = "POST_NOT_FOUND";
+    public static final String POST_DELETED = "POST_DELETED";
+    public static final String POST_UPDATED = "POST_UPDATED";
 
     private ServiceMessages() {
     }
+
 }
