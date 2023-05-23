@@ -23,6 +23,20 @@ spring:
         /swagger-resources/**
 
 
+  mail:
+    username: destek.dibt@gmail.com
+    password: knvwkxqhwmhqktlx
+    port: 587
+    host: smtp.gmail.com
+    properties:
+        mail:
+            smtp:
+              auth: true
+              starttls:
+                enable: true
+
+
+
 jwt:
   secret: 3F4428472B4B6250655368566D5970337336763979244226452948404D635166
   expiration: 86400000 # 1 day
@@ -46,4 +60,5 @@ cloudinary:
   api-key: 123456789012345
   api-secret: 1234567890123456789012345678901234567890
   cloud-name: dibt-test
+
 
