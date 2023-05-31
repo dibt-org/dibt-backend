@@ -2,10 +2,11 @@ package com.kim.dibt.security.models;
 
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.Hibernate;
+import com.kim.dibt.core.models.Auditable;
+import org.hibernate.annotations.*;
 
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -14,7 +15,13 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @Entity
-public class Token {
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "tokens")
+@SQLDelete(sql = "UPDATE tokens SET deleted=true,deleted_date=CURRENT_TIMESTAMP WHERE id = ?")
+@FilterDef(name = "deletedTokenFilter", parameters = @ParamDef(name = "idDeleted", type = Boolean.class))
+@Filter(name = "deletedTokenFilter", condition = "deleted = :idDeleted")
+@Where(clause = "deleted = false")
+public class Token extends Auditable {
 
     @Id
     @GeneratedValue
@@ -34,16 +41,4 @@ public class Token {
     @JoinColumn(name = "user_id")
     public User user;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Token t = (Token) o;
-        return Objects.equals(getId(), t.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

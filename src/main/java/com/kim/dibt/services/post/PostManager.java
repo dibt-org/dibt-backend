@@ -1,5 +1,6 @@
 package com.kim.dibt.services.post;
 
+import com.kim.dibt.core.models.PageModel;
 import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
 import com.kim.dibt.core.utils.result.DataResult;
@@ -10,9 +11,11 @@ import com.kim.dibt.models.Post;
 import com.kim.dibt.repo.PostRepository;
 import com.kim.dibt.security.models.User;
 import com.kim.dibt.services.ServiceMessages;
+import com.kim.dibt.services.post.convertor.GetAllPostDtoPageConvertor;
 import com.kim.dibt.services.post.dtos.*;
 import com.kim.dibt.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ public class PostManager implements PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final CustomModelMapper modelMapper;
+    private final GetAllPostDtoPageConvertor getAllPostDtoPageConvertor;
 
     @Override
     public DataResult<List<GetAllPostDto>> getAll() {
@@ -38,6 +42,13 @@ public class PostManager implements PostService {
         return SuccessDataResult.of(getAllPostDtos, ServiceMessages.POST_LISTED);
 
 
+    }
+
+    @Override
+    public DataResult<PageModel<GetAllPostDto>> getAll(Pageable pageable) {
+        var page = postRepository.findAll(pageable);
+        PageModel<GetAllPostDto> apply = getAllPostDtoPageConvertor.apply(page);
+        return SuccessDataResult.of(apply, ServiceMessages.POST_LISTED);
     }
 
     @Override

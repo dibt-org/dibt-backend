@@ -1,10 +1,12 @@
 package com.kim.dibt.api.v1;
 
+import com.kim.dibt.core.models.PageModel;
 import com.kim.dibt.core.utils.result.DataResult;
 import com.kim.dibt.services.post.PostService;
 import com.kim.dibt.services.post.dtos.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<DataResult<List<GetAllPostDto>>> getAll() {
         var result = postService.getAll();
         if (result.isSuccess()) {
@@ -25,6 +27,18 @@ public class PostController {
         return ResponseEntity.badRequest().body(result);
 
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<DataResult<PageModel<GetAllPostDto>>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var result = postService.getAll(pageable);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+
+    }
+
     @PostMapping
     public ResponseEntity<DataResult<AddedPostDto>> add(@RequestBody @Valid AddPostDto addPostDto) {
         var result = postService.add(addPostDto);
@@ -44,8 +58,8 @@ public class PostController {
     }
 
     @PutMapping
-    public ResponseEntity<DataResult<UpdatedPostDto>> update(@RequestBody @Valid UpdatePostDto addPostDto,@RequestParam Long id) {
-        var result = postService.update(addPostDto,id);
+    public ResponseEntity<DataResult<UpdatedPostDto>> update(@RequestBody @Valid UpdatePostDto addPostDto, @RequestParam Long id) {
+        var result = postService.update(addPostDto, id);
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
         }
