@@ -16,6 +16,13 @@ public class ServiceMessages {
     public static final String POST_NOT_FOUND = "POST_NOT_FOUND";
     public static final String POST_DELETED = "POST_DELETED";
     public static final String POST_UPDATED = "POST_UPDATED";
+    public static final String COMMENT_LISTED = "COMMENT_LISTED";
+    public static final String POST_EXIST = "POST_EXIST";
+    public static final String POST_FOUND = "POST_FOUND";
+    public static final String COMMENT_ADDED = "COMMENT_ADDED";
+    public static final String COMMENT_NOT_FOUND = "COMMENT_NOT_FOUND";
+    public static final String COMMENT_DELETED = "COMMENT_DELETED";
+    public static final String USER_HAS_NO_COMMENT = "USER_HAS_NO_COMMENT";
 
     private ServiceMessages() {
     }
