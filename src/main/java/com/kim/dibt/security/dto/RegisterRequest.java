@@ -14,7 +14,7 @@ public class RegisterRequest {
 
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+    @Email
     private String email;
 
     @NotNull

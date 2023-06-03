@@ -23,6 +23,7 @@ public class ServiceMessages {
     public static final String COMMENT_NOT_FOUND = "COMMENT_NOT_FOUND";
     public static final String COMMENT_DELETED = "COMMENT_DELETED";
     public static final String USER_HAS_NO_COMMENT = "USER_HAS_NO_COMMENT";
+    public static final String UPDATE_EMAIL = "UPDATE_EMAIL";
 
     private ServiceMessages() {
     }
