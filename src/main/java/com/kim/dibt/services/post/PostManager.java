@@ -3,10 +3,7 @@ package com.kim.dibt.services.post;
 import com.kim.dibt.core.models.PageModel;
 import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
-import com.kim.dibt.core.utils.result.DataResult;
-import com.kim.dibt.core.utils.result.ErrorDataResult;
-import com.kim.dibt.core.utils.result.Result;
-import com.kim.dibt.core.utils.result.SuccessDataResult;
+import com.kim.dibt.core.utils.result.*;
 import com.kim.dibt.models.Post;
 import com.kim.dibt.repo.PostRepository;
 import com.kim.dibt.security.models.User;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +94,23 @@ public class PostManager implements PostService {
         Post savedPost = postRepository.save(post);
         var updatedPostDto = modelMapper.ofStandard().map(savedPost, UpdatedPostDto.class);
         return SuccessDataResult.of(updatedPostDto, ServiceMessages.POST_UPDATED);
+    }
+
+    @Override
+    public DataResult<Post> findById(Long id) {
+        Optional<Post> byId = this.postRepository.findById(id);
+        if (byId.isEmpty()) {
+            return ErrorDataResult.of(null, ServiceMessages.POST_NOT_FOUND);
+        }
+        return SuccessDataResult.of(byId.get(), ServiceMessages.POST_FOUND);
+    }
+
+    @Override
+    public Result isExist(Long id) {
+        if (this.postRepository.existsById(id)) {
+            return SuccessResult.of(ServiceMessages.POST_EXIST);
+        }
+        return ErrorResult.of(ServiceMessages.POST_NOT_FOUND);
     }
 
     private Result isPostExist(Long id) {
