@@ -6,6 +6,7 @@ import com.kim.dibt.security.models.RoleType;
 import com.kim.dibt.services.post.dtos.UpdatePostDto;
 import com.kim.dibt.services.post.dtos.UpdatedPostDto;
 import com.kim.dibt.services.user.UserService;
+import com.kim.dibt.services.user.dtos.UpdateAboutUserDto;
 import com.kim.dibt.services.user.dtos.UpdateEmailUserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,14 @@ public class UserController {
     @PatchMapping("/just-update-email")
     public ResponseEntity<DataResult<UpdateEmailUserDto>> update(@RequestBody @Valid UpdateEmailUserDto updateEmailUserDto) {
         var result = userService.update(updateEmailUserDto);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+    @PatchMapping("/just-update-about")
+    public ResponseEntity<DataResult<UpdateAboutUserDto>> update(@RequestBody @Valid UpdateAboutUserDto updateAboutUserDto) {
+        var result = userService.update(updateAboutUserDto);
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
         }
