@@ -4,20 +4,19 @@ import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
 import com.kim.dibt.core.utils.constants.CoreConstants;
 import com.kim.dibt.core.utils.result.*;
-import com.kim.dibt.models.Post;
 import com.kim.dibt.security.models.RoleType;
 import com.kim.dibt.security.models.User;
 import com.kim.dibt.security.repo.RoleRepository;
 import com.kim.dibt.security.repo.UserRepository;
 import com.kim.dibt.services.ServiceMessages;
-import com.kim.dibt.services.post.dtos.UpdatedPostDto;
+import com.kim.dibt.services.user.dtos.UpdateAboutUserDto;
 import com.kim.dibt.services.user.dtos.UpdateEmailUserDto;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -64,22 +63,6 @@ public class UserManager implements UserService {
         return SuccessDataResult.of(user, ServiceMessages.USER_FOUND);
     }
 
-    @Override
-    public DataResult<UpdateEmailUserDto> update(UpdateEmailUserDto updateEmailUserDto) {
-        Result run = BusinessRule.run(checkUserExistByUsername());
-        if (run != null) {
-            return ErrorDataResult.of(null, run.getMessage());
-        }
-        User user = userRepository.findByUsername(username()).orElse(null);
-        if (user == null) {
-            return ErrorDataResult.of(null, ServiceMessages.USER_NOT_FOUND);
-        }
-        user.setEmail(updateEmailUserDto.getEmail());
-        User savedEmail = userRepository.save(user);
-        var updateEmailUserDto1 = modelMapper.ofStandard().map(savedEmail, UpdateEmailUserDto.class);
-        return SuccessDataResult.of(updateEmailUserDto1,ServiceMessages.UPDATE_EMAIL);
-    }
-
     private Result checkRoleExists(RoleType roleType) {
         return repository.existsByRoleName(roleType) ? SuccessResult.of() : ErrorResult.of(CoreConstants.ROLE_NOT_FOUND);
     }
@@ -107,5 +90,40 @@ public class UserManager implements UserService {
     private String username(){
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
+
+    @Override
+    public <T> DataResult<T> updateUserField(Function<User, T> fieldUpdater, String successMessage) {
+        Result run = BusinessRule.run(checkUserExistByUsername());
+        if (run != null) {
+            return ErrorDataResult.of(null, run.getMessage());
+        }
+        User user = userRepository.findByUsername(username()).orElse(null);
+        if (user == null) {
+            return ErrorDataResult.of(null, ServiceMessages.USER_NOT_FOUND);
+        }
+        T updatedField = fieldUpdater.apply(user);
+        userRepository.save(user);
+        return SuccessDataResult.of(updatedField, successMessage);
+    }
+    @Override
+    public DataResult<UpdateEmailUserDto> update(UpdateEmailUserDto updateEmailUserDto) {
+        return updateUserField(
+                user -> {
+            user.setEmail(updateEmailUserDto.getEmail());
+            return modelMapper.ofStandard().map(userRepository.save(user), UpdateEmailUserDto.class);
+            },
+                ServiceMessages.UPDATE_EMAIL
+        );
+    }
+
+    @Override
+    public DataResult<UpdateAboutUserDto> update(UpdateAboutUserDto updateAboutUserDto) {
+        return updateUserField(user -> {
+            user.setAbout(updateAboutUserDto.getAbout());
+            return modelMapper.ofStandard().map(userRepository.save(user), UpdateAboutUserDto.class);
+        },  ServiceMessages.UPDATE_ABOUT);
+    }
+
+
 
 }

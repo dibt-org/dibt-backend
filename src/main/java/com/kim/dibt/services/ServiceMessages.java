@@ -24,6 +24,9 @@ public class ServiceMessages {
     public static final String COMMENT_DELETED = "COMMENT_DELETED";
     public static final String USER_HAS_NO_COMMENT = "USER_HAS_NO_COMMENT";
     public static final String UPDATE_EMAIL = "UPDATE_EMAIL";
+    public static final String UPDATE_ABOUT = "UPDATE_ABOUT";
+    public static final String EMAIL_CANT_UPDATE = "EMAIL_CANT_UPDATE";
+
 
     private ServiceMessages() {
     }
