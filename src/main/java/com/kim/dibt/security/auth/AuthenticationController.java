@@ -37,11 +37,11 @@ public class AuthenticationController {
             @RequestBody @Valid RegisterRequest request, HttpServletResponse response
     ) {
         var result = service.register(request);
-        addCookie(response, CoreConstants.ACCESS_TOKEN, result.getData().getAccessToken(), accessTokenExpiration);
-        addCookie(response, CoreConstants.REFRESH_TOKEN, result.getData().getRefreshToken(), refreshTokenExpiration);
         if (!result.isSuccess()) {
             return ResponseEntity.badRequest().body(result);
         }
+        addCookie(response, CoreConstants.ACCESS_TOKEN, result.getData().getAccessToken(), accessTokenExpiration);
+        addCookie(response, CoreConstants.REFRESH_TOKEN, result.getData().getRefreshToken(), refreshTokenExpiration);
         return ResponseEntity.ok(result);
     }
 
