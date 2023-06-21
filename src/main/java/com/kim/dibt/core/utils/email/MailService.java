@@ -4,7 +4,10 @@ import jakarta.mail.MessagingException;
 
 import java.io.File;
 
+
 public interface MailService {
-    String sendMail(String to);
-    String sendMultiMediaMail(String to) throws MessagingException;
+    void sendMail(String to, String subject, String body) throws MessagingException;
+    void sendMultiMediaMail(String to, String subject, String body, File file) throws MessagingException;
+    void sendHtmlMail(String to, String subject, String body) throws MessagingException;
+    void sendMail(String to, String subject, String body, String from) throws MessagingException;
 }

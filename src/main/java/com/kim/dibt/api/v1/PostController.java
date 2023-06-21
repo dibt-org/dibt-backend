@@ -7,6 +7,7 @@ import com.kim.dibt.services.post.dtos.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +40,8 @@ public class PostController {
 
     }
 
-    @PostMapping
-    public ResponseEntity<DataResult<AddedPostDto>> add(@RequestBody @Valid AddPostDto addPostDto) {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<DataResult<AddedPostDto>> add(@ModelAttribute @Valid AddPostDto addPostDto) {
         var result = postService.add(addPostDto);
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
