@@ -46,11 +46,9 @@ jwt:
 
 cors:
   allowed-origins: >
-    http://localhost:3000,
-    http://localhost:8080,
-    http://localhost:4200,
-    https://test-dibt.up.railway.app,
-    *
+    http://localhost:3000/,
+    http://localhost:8080/,
+    http://localhost:4200/
   allowed-methods: "*"
   allowed-headers: "*"
   exposed-headers: "Authorization,Link,X-Total-Count"
