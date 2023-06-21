@@ -6,9 +6,7 @@ import com.kim.dibt.services.comment.CommentService;
 import com.kim.dibt.services.comment.dtos.AddCommentDto;
 import com.kim.dibt.services.comment.dtos.AddedCommentDto;
 import com.kim.dibt.services.comment.dtos.DeletedCommentDto;
-import com.kim.dibt.services.comment.dtos.GetAllCommentDto;
-import com.kim.dibt.services.post.dtos.DeletedPostDto;
-import lombok.Getter;
+import com.kim.dibt.services.comment.dtos.GetAllCommentDto;;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;

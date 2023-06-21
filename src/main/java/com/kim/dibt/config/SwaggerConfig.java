@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.security.SecuritySchemes;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -24,6 +25,16 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
                         name = "bearerAuth",
                         scopes = {"read", "write"}
                 )
+        },
+        servers = {
+                @Server(
+                        description = "Local Server",
+                        url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "Railway Server",
+                        url = "https://test-dibt.up.railway.app"
+                )
         }
 )
 @SecuritySchemes(
@@ -36,6 +47,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
                         type = SecuritySchemeType.HTTP,
                         in = SecuritySchemeIn.HEADER
                 )
+
         }
 )
 public class SwaggerConfig {

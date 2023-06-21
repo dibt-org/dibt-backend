@@ -49,6 +49,8 @@ cors:
     http://localhost:3000,
     http://localhost:8080,
     http://localhost:4200,
+    https://test-dibt.up.railway.app,
+    *
   allowed-methods: "*"
   allowed-headers: "*"
   exposed-headers: "Authorization,Link,X-Total-Count"
@@ -64,5 +66,5 @@ cloudinary:
 api:
   v1:
     posts:
-      get-all: https://test-dibt.production.up.railway.app/api/v1/posts?page=%d&size=%d
+      get-all: https://test-dibt.up.railway.app/api/v1/posts?page=%d&size=%d
 
