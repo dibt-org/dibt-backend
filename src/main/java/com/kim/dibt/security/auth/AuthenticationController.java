@@ -8,10 +8,12 @@ import com.kim.dibt.security.dto.AuthenticationResponse;
 import com.kim.dibt.security.dto.LoginRequest;
 import com.kim.dibt.security.dto.RegisterRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +26,19 @@ import java.io.IOException;
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    @Value("${cookie.access-token.max-age}")
+    private int accessTokenExpiration;
+    @Value("${cookie.refresh-token.max-age}")
+    private int refreshTokenExpiration;
 
     @SecurityRequirement(name = "none")
     @PostMapping("/register")
     public ResponseEntity<Result> register(
-            @RequestBody @Valid RegisterRequest request
+            @RequestBody @Valid RegisterRequest request, HttpServletResponse response
     ) {
         var result = service.register(request);
+        addCookie(response, CoreConstants.ACCESS_TOKEN, result.getData().getAccessToken(), accessTokenExpiration);
+        addCookie(response, CoreConstants.REFRESH_TOKEN, result.getData().getRefreshToken(), refreshTokenExpiration);
         if (!result.isSuccess()) {
             return ResponseEntity.badRequest().body(result);
         }
@@ -40,9 +48,12 @@ public class AuthenticationController {
     @SecurityRequirement(name = "none")
     @PostMapping("/login")
     public ResponseEntity<DataResult<AuthenticationResponse>> login(
-            @RequestBody @Valid LoginRequest request
+            @RequestBody @Valid LoginRequest request, HttpServletResponse response
     ) {
-        return ResponseEntity.ok(new SuccessDataResult<>(service.login(request), CoreConstants.LOGIN_SUCCESS));
+        AuthenticationResponse login = service.login(request);
+        addCookie(response, CoreConstants.ACCESS_TOKEN, login.getAccessToken(), accessTokenExpiration);
+        addCookie(response, CoreConstants.REFRESH_TOKEN, login.getRefreshToken(), refreshTokenExpiration);
+        return ResponseEntity.ok(new SuccessDataResult<>(login, CoreConstants.LOGIN_SUCCESS));
     }
 
     @PostMapping("/logout")
@@ -72,6 +83,14 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(result);
         }
         return ResponseEntity.ok(result);
+    }
+
+    private void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+        var cookie = new Cookie(name, value);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(maxAge);
+        response.addCookie(cookie);
     }
 
 }

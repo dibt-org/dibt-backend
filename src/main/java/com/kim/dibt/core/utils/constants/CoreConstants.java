@@ -32,6 +32,8 @@ public class CoreConstants {
     public static final String USER_ALREADY_HAS_ROLE = "USER_ALREADY_HAS_ROLE";
     public static final String WRONG_PASSWORD = "WRONG_PASSWORD";
     public static final String PASSWORD_CHANGED = "PASSWORD_CHANGED";
+    public static final String ACCESS_TOKEN = "access_token";
+    public static final String REFRESH_TOKEN = "refresh_token";
 
     // private constructor to prevent instantiation
     private CoreConstants() {

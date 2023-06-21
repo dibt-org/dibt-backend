@@ -68,3 +68,9 @@ api:
     posts:
       get-all: https://test-dibt.up.railway.app/api/v1/posts?page=%d&size=%d
 
+cookie:
+  refresh-token:
+    max-age: 604800 # 7 days
+  access-token:
+    max-age: 86400 # 1 day
+

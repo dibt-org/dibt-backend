@@ -41,13 +41,13 @@ public class AuthenticationService {
     private final PersonalUserRepo personalUserRepo;
     private final CustomModelMapper modelMapper;
 
-    public Result register(RegisterRequest request) {
+    public DataResult<AuthenticationResponse> register(RegisterRequest request) {
         var result = BusinessRule.run(
                 checkUsernameExists(request.getUsername()),
                 checkEmailExists(request.getEmail())
         );
         if (result != null) {
-            return result;
+            return new ErrorDataResult<>(result.getMessage());
         }
         PersonalUser personalUser = modelMapper.ofStandard().map(request, PersonalUser.class);
         personalUser.setPassword(passwordEncoder.encode(request.getPassword()));
