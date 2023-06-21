@@ -7,9 +7,9 @@ spring:
       ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/dibt-test
+    url: jdbc:postgresql://containers-us-west-96.railway.app:6584/railway
     username: postgres
-    password: 12345
+    password: Zaac43FETvJ1K6D7dlxb
     driver-class-name: org.postgresql.Driver
   security:
     filter:
@@ -29,11 +29,11 @@ spring:
     port: 587
     host: smtp.gmail.com
     properties:
-        mail:
-            smtp:
-              auth: true
-              starttls:
-                enable: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 
@@ -45,20 +45,24 @@ jwt:
 
 
 cors:
-    allowed-origins: >
-        http://localhost:3000,
-        http://localhost:8080,
-        http://localhost:4200,
-    allowed-methods: "*"
-    allowed-headers: "*"
-    exposed-headers: "Authorization,Link,X-Total-Count"
-    allow-credentials: true
-    max-age: 1800
+  allowed-origins: >
+    http://localhost:3000,
+    http://localhost:8080,
+    http://localhost:4200,
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "Authorization,Link,X-Total-Count"
+  allow-credentials: true
+  max-age: 1800
 
 
 cloudinary:
-  api-key: 123456789012345
-  api-secret: 1234567890123456789012345678901234567890
-  cloud-name: dibt-test
+  api-key: 737629351212119
+  api-secret: RKI6WkSG4ohV-kA5f6kyJH2-XIE
+  cloud-name: dp1yugjn4
 
+api:
+  v1:
+    posts:
+      get-all: https://test-dibt.production.up.railway.app/api/v1/posts?page=%d&size=%d
 

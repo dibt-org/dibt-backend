@@ -26,6 +26,8 @@ public class ServiceMessages {
     public static final String UPDATE_EMAIL = "UPDATE_EMAIL";
     public static final String UPDATE_ABOUT = "UPDATE_ABOUT";
     public static final String EMAIL_CANT_UPDATE = "EMAIL_CANT_UPDATE";
+    public static final String FILE_IS_NULL = "FILE_IS_NULL";
+    public static final String FILE_TYPE_NOT_SUPPORTED = "FILE_TYPE_NOT_SUPPORTED";
 
 
     private ServiceMessages() {

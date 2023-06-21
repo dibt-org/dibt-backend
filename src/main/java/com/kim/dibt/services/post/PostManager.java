@@ -1,13 +1,18 @@
 package com.kim.dibt.services.post;
 
+import com.kim.dibt.adapters.MediaUploadAdapterService;
 import com.kim.dibt.core.models.PageModel;
 import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
 import com.kim.dibt.core.utils.result.*;
+import com.kim.dibt.models.Media;
 import com.kim.dibt.models.Post;
+import com.kim.dibt.repo.MediaRepository;
 import com.kim.dibt.repo.PostRepository;
 import com.kim.dibt.security.models.User;
 import com.kim.dibt.services.ServiceMessages;
+import com.kim.dibt.services.mention.MentionService;
+import com.kim.dibt.services.mention.dtos.AddMentionDto;
 import com.kim.dibt.services.post.convertor.GetAllPostDtoPageConvertor;
 import com.kim.dibt.services.post.dtos.*;
 import com.kim.dibt.services.user.UserService;
@@ -15,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,6 +34,9 @@ public class PostManager implements PostService {
     private final UserService userService;
     private final CustomModelMapper modelMapper;
     private final GetAllPostDtoPageConvertor getAllPostDtoPageConvertor;
+    private final MentionService mentionService;
+    private final MediaUploadAdapterService mediaUploadAdapterService;
+    private final MediaRepository mediaRepository;
 
     @Override
     public DataResult<List<GetAllPostDto>> getAll() {
@@ -52,17 +62,59 @@ public class PostManager implements PostService {
     @Override
     public DataResult<AddedPostDto> add(AddPostDto addPostDto) {
         var post = modelMapper.ofStandard().map(addPostDto, Post.class);
+        post.setMentions(null);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         DataResult<User> byUsername = userService.findByUsername(username);
         if (!byUsername.isSuccess()) {
             return ErrorDataResult.of(null, byUsername.getMessage());
         }
         post.setUser(byUsername.getData());
-        Post savedPos = postRepository.save(post);
-        AddedPostDto addedPostDto = modelMapper.ofStandard().map(savedPos, AddedPostDto.class);
-        return SuccessDataResult.of(addedPostDto, ServiceMessages.POST_ADDED);
+        Post savedPost = postRepository.save(post);
+        DataResult<List<AddMentionDto>> addMentionsResult = mentionService.addAll(addPostDto.getMentions(), savedPost);
+        if (!addMentionsResult.isSuccess()) {
+            return ErrorDataResult.of(null, addMentionsResult.getMessage());
+        }
+        List<String> mediaUrls = new ArrayList<>();
+        addPostDto.getImages().forEach(image -> {
+            if (isFileValid(image).isSuccess()) {
+                DataResult<Map<?, ?>> uploadImage = mediaUploadAdapterService.uploadImage(image);
+                if (uploadImage.isSuccess()) {
+                    Object url = uploadImage.getData().get("url");
+                    if (url != null) {
+                        Media media = new Media();
+                        media.setPost(savedPost);
+                        media.setUrl(url.toString());
+                        media.setType(image.getContentType());
+                        Media save = mediaRepository.save(media);
+                        mediaUrls.add(save.getUrl());
+                    }
+                }
+            }
+        });
 
+        AddedPostDto addedPostDto = modelMapper.ofStandard().map(savedPost, AddedPostDto.class);
+        addedPostDto.setMediaUrls(mediaUrls);
+        List<String> mentions = new ArrayList<>();
+        addMentionsResult.getData().forEach(mention -> mentions.add(mention.getUsername()));
+        addedPostDto.setMentions(mentions);
+        return SuccessDataResult.of(addedPostDto, ServiceMessages.POST_ADDED);
     }
+
+    // check if file is not null and type is image or video
+    private Result isFileValid(MultipartFile file) {
+        if (file == null) {
+            return new ErrorResult(ServiceMessages.FILE_IS_NULL);
+        }
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            return new ErrorResult(ServiceMessages.FILE_IS_NULL);
+        }
+        if (!contentType.startsWith("image") && !contentType.startsWith("video")) {
+            return new ErrorResult(ServiceMessages.FILE_TYPE_NOT_SUPPORTED);
+        }
+        return SuccessResult.of();
+    }
+
 
     @Override
     public DataResult<DeletedPostDto> delete(Long id) {

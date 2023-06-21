@@ -1,8 +1,10 @@
 package com.kim.dibt.services.post.convertor;
 
 import com.kim.dibt.core.models.PageModel;
+import com.kim.dibt.models.Media;
 import com.kim.dibt.models.Post;
 import com.kim.dibt.services.post.dtos.GetAllPostDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,8 @@ import java.util.function.Function;
 
 @Service
 public class GetAllPostDtoPageConvertor implements Function<Page<Post>, PageModel<GetAllPostDto>> {
+    @Value("${api.v1.posts.get-all}")
+    String link;
     @Override
     public PageModel<GetAllPostDto> apply(Page<Post> page) {
         PageModel<GetAllPostDto> pageModel = new PageModel<>();
@@ -19,6 +23,8 @@ public class GetAllPostDtoPageConvertor implements Function<Page<Post>, PageMode
             getAllPostDto.setTitle(post.getTitle());
             getAllPostDto.setContent(post.getContent());
             getAllPostDto.setUsername(post.getUser().getUsername());
+            getAllPostDto.setMediaUrls(post.getMedias().stream().map(Media::getUrl).toList());
+            getAllPostDto.setMentions(post.getMentions().stream().map(mention -> mention.getUser().getUsername()).toList());
             return getAllPostDto;
         }).toList());
         pageModel.setTotalPages(page.getTotalPages());
@@ -27,7 +33,6 @@ public class GetAllPostDtoPageConvertor implements Function<Page<Post>, PageMode
         pageModel.setPageSize(page.getSize());
         pageModel.setHasNext(page.hasNext());
         pageModel.setHasPrevious(page.hasPrevious());
-        String link = "http://localhost:8080/api/v1/posts?page=%d&size=%d";
         int previousPageNumber = page.hasPrevious() ? page.previousPageable().getPageNumber() : 0;
         int previousPageSize = page.hasPrevious() ? page.previousPageable().getPageSize() : 0;
         int nextPageNumber = page.hasNext() ? page.nextPageable().getPageNumber() : 0;

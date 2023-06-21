@@ -3,6 +3,7 @@ package com.kim.dibt.security.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.kim.dibt.core.models.Auditable;
+import com.kim.dibt.models.Mention;
 import com.kim.dibt.models.Post;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.kim.dibt.models.Comment;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,6 +55,16 @@ public class User extends Auditable implements UserDetails {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Mention> mentions;
+
+
 
 
     @Override
