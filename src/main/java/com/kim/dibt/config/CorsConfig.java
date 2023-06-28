@@ -20,7 +20,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(allowedOrigin, "http://localhost:4200")
+                        .allowedOrigins(allowedOrigin, "http://localhost:4200","https://test-up-dibt.vercel.app")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .exposedHeaders("Authorization")
