@@ -6,6 +6,8 @@ import com.kim.dibt.security.models.RoleType;
 import com.kim.dibt.security.models.User;
 import com.kim.dibt.services.user.dtos.UpdateAboutUserDto;
 import com.kim.dibt.services.user.dtos.UpdateEmailUserDto;
+
+import java.util.List;
 import java.util.function.Function;
 
 public interface UserService {
@@ -18,4 +20,5 @@ public interface UserService {
 
     public <T> DataResult<T> updateUserField(Function<User, T> fieldUpdater, String successMessage);
 
+    DataResult<List<String>> query(String query);
 }

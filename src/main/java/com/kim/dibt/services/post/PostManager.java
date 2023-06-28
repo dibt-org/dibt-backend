@@ -22,10 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,11 +44,31 @@ public class PostManager implements PostService {
         all.forEach(post -> {
             GetAllPostDto getAllPostDto = modelMapper.ofStandard().map(post, GetAllPostDto.class);
             getAllPostDto.setUsername(post.getUser().getUsername());
+            getAllPostDto.setCreatedAtMessage(getCreatedAtMessage(post.getCreatedDate()));
+            getAllPostDto.setMediaUrls(post.getMedias().stream().map(Media::getUrl).toList());
             getAllPostDtos.add(getAllPostDto);
         });
         return SuccessDataResult.of(getAllPostDtos, ServiceMessages.POST_LISTED);
 
 
+    }
+
+    private static String getCreatedAtMessage(Date createdAt) {
+        LocalDateTime createdAtDateTime = LocalDateTime.ofInstant(createdAt.toInstant(), java.time.ZoneId.systemDefault());
+        LocalDateTime now = LocalDateTime.now(); // Şu anki zaman
+
+        Duration duration = Duration.between(createdAtDateTime, now); // İki tarih arasındaki farkı hesapla
+
+        if (duration.toMinutes() < 60) {
+            long minutes = duration.toMinutes();
+            return minutes + " dakika önce";
+        } else if (duration.toHours() < 24) {
+            long hours = duration.toHours();
+            return hours + " saat önce";
+        } else {
+            long days = duration.toDays();
+            return days + " gün önce";
+        }
     }
 
     @Override

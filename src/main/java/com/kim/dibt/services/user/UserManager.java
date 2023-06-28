@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -70,7 +71,8 @@ public class UserManager implements UserService {
     private Result checkUserExists(Long userId) {
         return repository.existsById(userId) ? SuccessResult.of() : ErrorResult.of(CoreConstants.USER_NOT_FOUND);
     }
-    private Result checkUserExistByUsername(){
+
+    private Result checkUserExistByUsername() {
         Optional<User> byUsername = this.userRepository.findByUsername(username());
         if (byUsername.isEmpty())
             return ErrorResult.of(ServiceMessages.USER_NOT_FOUND);
@@ -87,7 +89,8 @@ public class UserManager implements UserService {
         }
         return false;
     }
-    private String username(){
+
+    private String username() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
@@ -105,13 +108,19 @@ public class UserManager implements UserService {
         userRepository.save(user);
         return SuccessDataResult.of(updatedField, successMessage);
     }
+
+    @Override
+    public DataResult<List<String>> query(String query) {
+        return SuccessDataResult.of(this.userRepository.findUsernameByQuery(query), ServiceMessages.QUERY_SUCCESS);
+    }
+
     @Override
     public DataResult<UpdateEmailUserDto> update(UpdateEmailUserDto updateEmailUserDto) {
         return updateUserField(
                 user -> {
-            user.setEmail(updateEmailUserDto.getEmail());
-            return modelMapper.ofStandard().map(userRepository.save(user), UpdateEmailUserDto.class);
-            },
+                    user.setEmail(updateEmailUserDto.getEmail());
+                    return modelMapper.ofStandard().map(userRepository.save(user), UpdateEmailUserDto.class);
+                },
                 ServiceMessages.UPDATE_EMAIL
         );
     }
@@ -121,9 +130,8 @@ public class UserManager implements UserService {
         return updateUserField(user -> {
             user.setAbout(updateAboutUserDto.getAbout());
             return modelMapper.ofStandard().map(userRepository.save(user), UpdateAboutUserDto.class);
-        },  ServiceMessages.UPDATE_ABOUT);
+        }, ServiceMessages.UPDATE_ABOUT);
     }
-
 
 
 }

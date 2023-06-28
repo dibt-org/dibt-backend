@@ -87,7 +87,9 @@ public class AuthenticationController {
 
     private void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         var cookie = new Cookie(name, value);
-        cookie.setPath("/");
+        cookie.setDomain("localhost");
+        cookie.setPath("/auth");
+        cookie.setAttribute("SameSite", "dibt");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
