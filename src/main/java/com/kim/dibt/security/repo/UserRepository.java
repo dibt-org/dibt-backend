@@ -1,5 +1,6 @@
 package com.kim.dibt.security.repo;
 
+import com.kim.dibt.models.PersonalUser;
 import com.kim.dibt.security.models.Role;
 import com.kim.dibt.security.models.RoleType;
 import com.kim.dibt.security.models.User;
@@ -17,4 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u.username FROM User u WHERE u.username LIKE %?1%")
     List<String> findUsernameByQuery(String query);
+
+
+    @Query("SELECT u FROM User u WHERE u.username = ?1")
+    User isVerified(String username);
 }

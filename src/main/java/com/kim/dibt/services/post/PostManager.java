@@ -80,6 +80,7 @@ public class PostManager implements PostService {
 
     @Override
     public DataResult<AddedPostDto> add(AddPostDto addPostDto) {
+
         var post = modelMapper.ofStandard().map(addPostDto, Post.class);
         post.setMentions(null);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -87,6 +88,8 @@ public class PostManager implements PostService {
         if (!byUsername.isSuccess()) {
             return ErrorDataResult.of(null, byUsername.getMessage());
         }
+        if (Boolean.FALSE.equals(byUsername.getData().getIsVerified()))
+            return ErrorDataResult.of(null, ServiceMessages.USER_NOT_VERIFIED);
         post.setUser(byUsername.getData());
         Post savedPost = postRepository.save(post);
         DataResult<List<AddMentionDto>> addMentionsResult = mentionService.addAll(addPostDto.getMentions(), savedPost);

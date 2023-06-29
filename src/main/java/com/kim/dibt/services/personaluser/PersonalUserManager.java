@@ -3,17 +3,19 @@ package com.kim.dibt.services.personaluser;
 import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
 import com.kim.dibt.core.utils.result.*;
+import com.kim.dibt.mernis.UBCKPSPublicSoap12;
 import com.kim.dibt.models.PersonalUser;
 import com.kim.dibt.repo.PersonalUserRepo;
 import com.kim.dibt.security.config.JwtService;
+import com.kim.dibt.security.models.User;
+import com.kim.dibt.security.repo.UserRepository;
 import com.kim.dibt.services.ServiceMessages;
-import com.kim.dibt.services.personaluser.dtos.AddPersonalUser;
-import com.kim.dibt.services.personaluser.dtos.AddedPersonalUser;
-import com.kim.dibt.services.personaluser.dtos.UpdatePersonalUser;
-import com.kim.dibt.services.personaluser.dtos.UpdatedPersonalUser;
+import com.kim.dibt.services.personaluser.dtos.*;
+import com.kim.dibt.services.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,6 +28,8 @@ public class PersonalUserManager implements PersonalUserService {
     private final CustomModelMapper modelMapper;
     private final PersonalUserRepo personalUserRepo;
     private final JwtService jwtService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     public DataResult<AddedPersonalUser> addPersonalUser(AddPersonalUser addPersonalUser, HttpServletRequest request) {
@@ -38,11 +42,34 @@ public class PersonalUserManager implements PersonalUserService {
         if (result != null) {
             return ErrorDataResult.of(null, result.getMessage());
         }
+        UBCKPSPublicSoap12 ubckpsPublicSoap12 = new UBCKPSPublicSoap12();
+        Boolean isRealPerson;
+        try {
+            isRealPerson = ubckpsPublicSoap12.TCKimlikNoDogrula(
+                    Long.parseLong(addPersonalUser.getNationalityId()),
+                    addPersonalUser.getFirstName(),
+                    addPersonalUser.getLastName(),
+                    extractYear(addPersonalUser.getBirthDate()));
+        } catch (Exception e) {
+            return ErrorDataResult.of(null, ServiceMessages.PERSONAL_USER_NOT_VALID);
+        }
+        if (Boolean.FALSE.equals(isRealPerson)) {
+            return ErrorDataResult.of(null, ServiceMessages.PERSONAL_USER_NOT_VALID);
+        }
+        User byUsername = userService.findByUsername(personalUser.getUsername()).getData();
+        byUsername.setIsVerified(true);
+        userRepository.save(byUsername);
         modelMapper.ofStrict().map(addPersonalUser, personalUser);
         PersonalUser savedPersonalUser = personalUserRepo.save(personalUser);
         AddedPersonalUser addedPersonalUser = modelMapper.ofStandard().map(savedPersonalUser, AddedPersonalUser.class);
         return SuccessDataResult.of(addedPersonalUser, ServiceMessages.PERSONAL_USER_ADDED);
 
+    }
+
+    // extract year from birth date ex 01.01.1990 -> 1990
+    private int extractYear(String birthDate) {
+        String[] split = birthDate.split("\\.");
+        return Integer.parseInt(split[2]);
     }
 
     @Override
@@ -64,6 +91,46 @@ public class PersonalUserManager implements PersonalUserService {
         return SuccessDataResult.of(updatedPersonalUser, ServiceMessages.PERSONAL_USER_UPDATED);
 
 
+    }
+
+    @Override
+    public DataResult<DetailOfUserDto> getDetailOfUser() {
+        DetailOfUserDto detailOfUser = personalUserRepo.getDetailOfUser(username());
+        if (detailOfUser == null) {
+            return ErrorDataResult.of(null, ServiceMessages.USER_NOT_FOUND);
+        }
+        return SuccessDataResult.of(detailOfUser, ServiceMessages.USER_FOUND);
+    }
+
+    @Override
+    public DataResult<DetailOfUserDto> getDetailOfUser(String username) {
+        DetailOfUserDto detailOfUser = personalUserRepo.getDetailOfUser(username);
+        if (detailOfUser == null) {
+            return ErrorDataResult.of(null, ServiceMessages.USER_NOT_FOUND);
+        }
+        detailOfUser.setEmail(null);
+        detailOfUser.setBirthDate(null);
+        detailOfUser.setNationalityId(null);
+        return SuccessDataResult.of(detailOfUser, ServiceMessages.USER_FOUND);
+    }
+
+    @Override
+    public Result isVerifiedUser() {
+        User byUsername = userRepository.isVerified(username());
+        log.info("byUsername: {}", byUsername);
+        if (byUsername == null) {
+            return ErrorResult.of(ServiceMessages.USER_NOT_FOUND);
+        }
+        if (Boolean.TRUE.equals(byUsername.getIsVerified())) {
+            return SuccessResult.of();
+        }
+        return ErrorResult.of(ServiceMessages.USER_NOT_VERIFIED);
+    }
+
+    private String username() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.debug("username: {}", username);
+        return username;
     }
 
     // check if user exists by national id but not by user username

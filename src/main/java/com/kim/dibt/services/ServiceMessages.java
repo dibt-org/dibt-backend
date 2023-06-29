@@ -29,6 +29,8 @@ public class ServiceMessages {
     public static final String FILE_IS_NULL = "FILE_IS_NULL";
     public static final String FILE_TYPE_NOT_SUPPORTED = "FILE_TYPE_NOT_SUPPORTED";
     public static final String QUERY_SUCCESS = "QUERY_SUCCESS";
+    public static final String PERSONAL_USER_NOT_VALID = "PERSONAL_USER_NOT_VALID";
+    public static final String USER_NOT_VERIFIED = "USER_NOT_VERIFIED";
 
 
     private ServiceMessages() {

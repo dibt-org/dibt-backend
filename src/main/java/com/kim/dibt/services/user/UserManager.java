@@ -114,6 +114,8 @@ public class UserManager implements UserService {
         return SuccessDataResult.of(this.userRepository.findUsernameByQuery(query), ServiceMessages.QUERY_SUCCESS);
     }
 
+
+
     @Override
     public DataResult<UpdateEmailUserDto> update(UpdateEmailUserDto updateEmailUserDto) {
         return updateUserField(

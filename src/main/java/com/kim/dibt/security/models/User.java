@@ -42,6 +42,7 @@ public class User extends Auditable implements UserDetails {
     private String username;
     private String password;
     private String about;
+    private Boolean isVerified = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude

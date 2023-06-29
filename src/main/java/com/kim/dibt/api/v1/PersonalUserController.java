@@ -5,6 +5,7 @@ import com.kim.dibt.core.utils.result.Result;
 import com.kim.dibt.services.personaluser.PersonalUserService;
 import com.kim.dibt.services.personaluser.dtos.AddPersonalUser;
 import com.kim.dibt.services.personaluser.dtos.AddedPersonalUser;
+import com.kim.dibt.services.personaluser.dtos.DetailOfUserDto;
 import com.kim.dibt.services.personaluser.dtos.UpdatePersonalUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -33,6 +34,33 @@ public class PersonalUserController {
             @PathVariable long userId,
             HttpServletRequest request) {
         var result = personalUserService.updatePersonalUser(updatePersonalUser, userId, request);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<DataResult<DetailOfUserDto>> getDetailOfUser() {
+        var result = personalUserService.getDetailOfUser();
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("/detail/{username}")
+    public ResponseEntity<DataResult<DetailOfUserDto>> getDetailOfUser(@PathVariable String username) {
+        var result = personalUserService.getDetailOfUser(username);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("/is-verified-user")
+    public ResponseEntity<Result> isVerifiedUser() {
+        var result = personalUserService.isVerifiedUser();
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
         }

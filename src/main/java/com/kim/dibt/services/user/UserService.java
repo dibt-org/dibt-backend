@@ -21,4 +21,5 @@ public interface UserService {
     public <T> DataResult<T> updateUserField(Function<User, T> fieldUpdater, String successMessage);
 
     DataResult<List<String>> query(String query);
+
 }

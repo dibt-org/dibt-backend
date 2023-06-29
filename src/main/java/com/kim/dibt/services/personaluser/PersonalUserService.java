@@ -4,6 +4,7 @@ import com.kim.dibt.core.utils.result.DataResult;
 import com.kim.dibt.core.utils.result.Result;
 import com.kim.dibt.services.personaluser.dtos.AddPersonalUser;
 import com.kim.dibt.services.personaluser.dtos.AddedPersonalUser;
+import com.kim.dibt.services.personaluser.dtos.DetailOfUserDto;
 import com.kim.dibt.services.personaluser.dtos.UpdatePersonalUser;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -11,4 +12,9 @@ public interface PersonalUserService {
     DataResult<AddedPersonalUser> addPersonalUser(AddPersonalUser addPersonalUser, HttpServletRequest request);
 
     Result updatePersonalUser(UpdatePersonalUser updatePersonalUser, long userId, HttpServletRequest request);
+
+    DataResult<DetailOfUserDto> getDetailOfUser();
+
+    DataResult<DetailOfUserDto> getDetailOfUser(String username);
+    Result isVerifiedUser();
 }
