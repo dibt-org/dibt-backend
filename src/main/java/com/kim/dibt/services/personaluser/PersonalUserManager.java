@@ -3,7 +3,7 @@ package com.kim.dibt.services.personaluser;
 import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
 import com.kim.dibt.core.utils.result.*;
-import com.kim.dibt.mernis.UBCKPSPublicSoap12;
+import com.kim.dibt.mernis.Mernis;
 import com.kim.dibt.models.PersonalUser;
 import com.kim.dibt.repo.PersonalUserRepo;
 import com.kim.dibt.security.config.JwtService;
@@ -42,11 +42,10 @@ public class PersonalUserManager implements PersonalUserService {
         if (result != null) {
             return ErrorDataResult.of(null, result.getMessage());
         }
-        UBCKPSPublicSoap12 ubckpsPublicSoap12 = new UBCKPSPublicSoap12();
-        Boolean isRealPerson;
+        boolean isRealPerson;
         try {
-            isRealPerson = ubckpsPublicSoap12.TCKimlikNoDogrula(
-                    Long.parseLong(addPersonalUser.getNationalityId()),
+            isRealPerson = Mernis.verify(
+                    addPersonalUser.getNationalityId(),
                     addPersonalUser.getFirstName(),
                     addPersonalUser.getLastName(),
                     extractYear(addPersonalUser.getBirthDate()));
