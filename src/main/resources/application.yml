@@ -15,6 +15,7 @@ spring:
     filter:
       enabled: true
       whitelist: >
+        /api/v1/**,
         /api/v1/auth/**,
         /api/v1/public/**,
         /v3/api-docs/**,
