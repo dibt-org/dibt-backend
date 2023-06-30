@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class UpdatePersonalUser {
     @Size(min = 2)
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "Only letters are allowed")
+    @Pattern(regexp = "^[\\p{L}]*$", message = "Only letters are allowed")
     private String firstName;
     @Size(min = 2)
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "Only letters are allowed")
+    @Pattern(regexp = "^[\\p{L}]*$", message = "Only letters are allowed")
     private String lastName;
     @Size(min = 11, max = 11)
     @Pattern(regexp = "^[0-9]*$", message = "Only numbers are allowed")

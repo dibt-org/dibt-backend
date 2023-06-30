@@ -1,5 +1,7 @@
 package com.kim.dibt;
 
+import com.kim.dibt.models.City;
+import com.kim.dibt.repo.CityRepository;
 import com.kim.dibt.security.models.Role;
 import com.kim.dibt.security.models.RoleType;
 import com.kim.dibt.security.repo.RoleRepository;
@@ -8,7 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class DibtApplication {
@@ -25,5 +29,6 @@ public class DibtApplication {
             }
         });
     }
+
 
 }

@@ -23,4 +23,6 @@ public interface PostService {
     DataResult<Post> findById(Long id);
 
     Result isExist(Long id);
+
+    DataResult<List<GetAllPostDto>> getUserPosts(Long userId);
 }

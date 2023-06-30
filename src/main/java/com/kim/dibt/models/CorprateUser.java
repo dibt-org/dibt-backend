@@ -1,9 +1,7 @@
 package com.kim.dibt.models;
 
 import com.kim.dibt.security.models.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,4 +17,12 @@ import lombok.Setter;
 @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
 public class CorprateUser extends User {
     private String name;
+    private String website;
+    private String phone;
+    private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "city_id")
+    private City city;
+
 }

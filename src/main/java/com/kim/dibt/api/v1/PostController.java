@@ -67,4 +67,13 @@ public class PostController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @GetMapping("/get-user-posts")
+    public ResponseEntity<DataResult<List<GetAllPostDto>>> getUserPosts(@RequestParam Long userId) {
+        var result = postService.getUserPosts(userId);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
 }

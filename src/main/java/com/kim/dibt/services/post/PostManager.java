@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +47,7 @@ public class PostManager implements PostService {
             getAllPostDto.setUsername(post.getUser().getUsername());
             getAllPostDto.setCreatedAtMessage(getCreatedAtMessage(post.getCreatedDate()));
             getAllPostDto.setMediaUrls(post.getMedias().stream().map(Media::getUrl).toList());
+            getAllPostDto.setMentions(post.getMentions().stream().map(mention -> mention.getUser().getUsername()).toList());
             getAllPostDtos.add(getAllPostDto);
         });
         return SuccessDataResult.of(getAllPostDtos, ServiceMessages.POST_LISTED);
@@ -185,6 +187,21 @@ public class PostManager implements PostService {
             return SuccessResult.of(ServiceMessages.POST_EXIST);
         }
         return ErrorResult.of(ServiceMessages.POST_NOT_FOUND);
+    }
+
+    @Override
+    public DataResult<List<GetAllPostDto>> getUserPosts(Long userId) {
+        List<Post> posts = postRepository.findAllByUserId(userId);
+        List<GetAllPostDto> getAllPostDtos = new ArrayList<>();
+        posts.forEach(post -> {
+            GetAllPostDto getAllPostDto = modelMapper.ofStandard().map(post, GetAllPostDto.class);
+            getAllPostDto.setUsername(post.getUser().getUsername());
+            getAllPostDto.setCreatedAtMessage(getCreatedAtMessage(post.getCreatedDate()));
+            getAllPostDto.setMediaUrls(post.getMedias().stream().map(Media::getUrl).toList());
+            getAllPostDto.setMentions(post.getMentions().stream().map(mention -> mention.getUser().getUsername()).toList());
+            getAllPostDtos.add(getAllPostDto);
+        });
+        return SuccessDataResult.of(getAllPostDtos, ServiceMessages.POST_LISTED);
     }
 
     private Result isPostExist(Long id) {
