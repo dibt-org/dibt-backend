@@ -20,6 +20,7 @@ public class CorprateUser extends User {
     private String website;
     private String phone;
     private String address;
+    private String logo;
 
     @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST)
     @JoinColumn(name = "city_id")

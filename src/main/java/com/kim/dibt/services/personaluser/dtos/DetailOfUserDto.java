@@ -14,8 +14,9 @@ public class DetailOfUserDto {
     private String birthDate;
     private String email;
     private String username;
+    private String about;
 
-    public DetailOfUserDto(Long id, String firstName, String lastName, String nationalityId, String birthDate, String email, String username) {
+    public DetailOfUserDto(Long id, String firstName, String lastName, String nationalityId, String birthDate, String email, String username, String about) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,5 +24,6 @@ public class DetailOfUserDto {
         this.birthDate = birthDate;
         this.email = email;
         this.username = username;
+        this.about = about;
     }
 }

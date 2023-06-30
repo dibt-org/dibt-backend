@@ -7,6 +7,7 @@ import com.kim.dibt.services.post.dtos.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class PostController {
 
     @GetMapping("/page")
     public ResponseEntity<DataResult<PageModel<GetAllPostDto>>> getAll(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        var pageable = PageRequest.of(pageNumber, pageSize);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         var result = postService.getAll(pageable);
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);

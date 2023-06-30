@@ -22,7 +22,8 @@ public interface PersonalUserRepo extends JpaRepository<PersonalUser, Long> {
                         p.nationalityId,
                         p.birthDate,
                         p.email,
-                        p.username
+                        p.username,
+                        p.about
                     ) from PersonalUser p where p.username = ?1
                     """
     )
