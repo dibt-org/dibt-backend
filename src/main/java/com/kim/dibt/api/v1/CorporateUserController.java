@@ -3,9 +3,7 @@ package com.kim.dibt.api.v1;
 import com.kim.dibt.core.utils.result.DataResult;
 import com.kim.dibt.core.utils.result.Result;
 import com.kim.dibt.services.corporateuser.CorporateUserService;
-import com.kim.dibt.services.corporateuser.dtos.AddCorporateUserDto;
-import com.kim.dibt.services.corporateuser.dtos.AddedCorporateUserDto;
-import com.kim.dibt.services.corporateuser.dtos.GetDetailOfCorporateUser;
+import com.kim.dibt.services.corporateuser.dtos.*;
 import com.kim.dibt.services.personaluser.PersonalUserService;
 import com.kim.dibt.services.personaluser.dtos.AddPersonalUser;
 import com.kim.dibt.services.personaluser.dtos.AddedPersonalUser;
@@ -36,6 +34,22 @@ public class CorporateUserController {
     @GetMapping("/city/{cityId}")
     public ResponseEntity<DataResult<List<GetDetailOfCorporateUser>>> getByCityId(@PathVariable Long cityId) {
         var result = service.getByCityId(cityId);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+    @GetMapping("/username/{username}")
+    public ResponseEntity<DataResult<GetDetailOfCorporateUser>> getByUsername(@PathVariable String username) {
+        var result = service.getByUsername(username);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+    @GetMapping("/map")
+    public ResponseEntity<DataResult<List<MapDto>>> getMap() {
+        var result = service.getMap();
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
         }

@@ -101,22 +101,24 @@ public class PostManager implements PostService {
             return ErrorDataResult.of(null, addMentionsResult.getMessage());
         }
         List<String> mediaUrls = new ArrayList<>();
-        addPostDto.getImages().forEach(image -> {
-            if (isFileValid(image).isSuccess()) {
-                DataResult<Map<?, ?>> uploadImage = mediaUploadAdapterService.uploadImage(image);
-                if (uploadImage.isSuccess()) {
-                    Object url = uploadImage.getData().get("url");
-                    if (url != null) {
-                        Media media = new Media();
-                        media.setPost(savedPost);
-                        media.setUrl(url.toString());
-                        media.setType(image.getContentType());
-                        Media save = mediaRepository.save(media);
-                        mediaUrls.add(save.getUrl());
+        if (addPostDto.getImages() != null) {
+            addPostDto.getImages().forEach(image -> {
+                if (isFileValid(image).isSuccess()) {
+                    DataResult<Map<?, ?>> uploadImage = mediaUploadAdapterService.uploadImage(image);
+                    if (uploadImage.isSuccess()) {
+                        Object url = uploadImage.getData().get("url");
+                        if (url != null) {
+                            Media media = new Media();
+                            media.setPost(savedPost);
+                            media.setUrl(url.toString());
+                            media.setType(image.getContentType());
+                            Media save = mediaRepository.save(media);
+                            mediaUrls.add(save.getUrl());
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         AddedPostDto addedPostDto = modelMapper.ofStandard().map(savedPost, AddedPostDto.class);
         addedPostDto.setMediaUrls(mediaUrls);

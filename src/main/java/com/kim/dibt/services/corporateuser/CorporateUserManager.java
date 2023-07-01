@@ -7,9 +7,7 @@ import com.kim.dibt.models.CorprateUser;
 import com.kim.dibt.repo.CityRepository;
 import com.kim.dibt.repo.CorporateUserRepository;
 import com.kim.dibt.repo.MentionRepository;
-import com.kim.dibt.services.corporateuser.dtos.AddCorporateUserDto;
-import com.kim.dibt.services.corporateuser.dtos.AddedCorporateUserDto;
-import com.kim.dibt.services.corporateuser.dtos.GetDetailOfCorporateUser;
+import com.kim.dibt.services.corporateuser.dtos.*;
 import kotlin.jvm.internal.SerializedIr;
 import lombok.RequiredArgsConstructor;
 import org.cloudinary.json.JSONArray;
@@ -21,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,36 +97,54 @@ public class CorporateUserManager implements CorporateUserService {
         return SuccessDataResult.of(getDetailOfCorporateUsers, "Kurumlar başarıyla getirildi.");
     }
 
+    @Override
+    public DataResult<GetDetailOfCorporateUser> getByUsername(String username) {
+        GetDetailOfCorporateUser corprateUser = corporateUserRepository.findByUsername(username);
+        return SuccessDataResult.of(corprateUser, "Kurum başarıyla getirildi.");
+    }
+
+    @Override
+    public DataResult<List<MapDto>> getMap() {
+        Long totalCount = corporateUserRepository.countAl();
+        List<GetDetailOfCorporateUserForMapDto> dataList = corporateUserRepository.getAllDetailOfCorporate();
+
+        Map<Long, Long> complaintCountMap = dataList.stream()
+                .collect(Collectors.groupingBy(GetDetailOfCorporateUserForMapDto::getCityId, Collectors.summingLong(GetDetailOfCorporateUserForMapDto::getComplaintCount)));
+
+        List<MapDto> result = complaintCountMap.entrySet()
+                .stream()
+                .map(entry -> new MapDto(entry.getKey(), entry.getKey(), entry.getValue(), determineColor(entry.getValue(), totalCount)))
+                .toList();
+
+        return SuccessDataResult.of(result, "Kurumlar başarıyla getirildi.");
+    }
+
     private void setColorOfCorporateUsers(List<GetDetailOfCorporateUser> getDetailOfCorporateUsers) {
-/*
-Kırmızı: #FF0000
-Koyu turuncu: #FF4500
-Turuncu: #FFA500
-Sarı: #FFFF00
-Yeşil sarı: #ADFF2F
-Yeşil: #008000
-Koyu yeşil: #006400
- */
         long sumOfComplaints = getDetailOfCorporateUsers.stream().mapToLong(GetDetailOfCorporateUser::getComplaintCount).sum();
         getDetailOfCorporateUsers.forEach(getDetailOfCorporateUser -> {
-            if (getDetailOfCorporateUser.getComplaintCount() == 0) {
-                getDetailOfCorporateUser.setColor("#008000");
-            } else if (getDetailOfCorporateUser.getComplaintCount() <= sumOfComplaints / 7) {
-                getDetailOfCorporateUser.setColor("#006400");
-            } else if (getDetailOfCorporateUser.getComplaintCount() <= sumOfComplaints / 6) {
-                getDetailOfCorporateUser.setColor("#ADFF2F");
-            } else if (getDetailOfCorporateUser.getComplaintCount() <= sumOfComplaints / 5) {
-                getDetailOfCorporateUser.setColor("#FFFF00");
-            } else if (getDetailOfCorporateUser.getComplaintCount() <= sumOfComplaints / 4) {
-                getDetailOfCorporateUser.setColor("#FFA500");
-            } else if (getDetailOfCorporateUser.getComplaintCount() <= sumOfComplaints / 3) {
-                getDetailOfCorporateUser.setColor("#FF4500");
-            } else if (getDetailOfCorporateUser.getComplaintCount() <= sumOfComplaints / 2) {
-                getDetailOfCorporateUser.setColor("#FF0000");
-            } else {
-                getDetailOfCorporateUser.setColor("#FF0000");
-            }
+            long complaintCount = getDetailOfCorporateUser.getComplaintCount();
+            getDetailOfCorporateUser.setColor(determineColor(complaintCount, sumOfComplaints));
         });
+    }
+
+    private String determineColor(long complaintCount, long totalCount) {
+        if (complaintCount == 0) {
+            return "#008000"; // Yeşil
+        } else if (complaintCount <= totalCount / 8) {
+            return "#006400"; // Koyu yeşil
+        } else if (complaintCount <= totalCount / 7) {
+            return "#ADFF2F"; // Yeşil sarı
+        } else if (complaintCount <= totalCount / 6) {
+            return "#FFFF00"; // Sarı
+        } else if (complaintCount <= totalCount / 5) {
+            return "#FFA500"; // Turuncu
+        } else if (complaintCount <= totalCount / 4) {
+            return "#FF4500"; // Koyu turuncu
+        } else if (complaintCount <= totalCount / 3) {
+            return "#FF0000"; // Kırmızı
+        } else {
+            return "#FF0000"; // Kırmızı (eğer complaintCount totalCount / 2'den büyükse)
+        }
     }
 
 

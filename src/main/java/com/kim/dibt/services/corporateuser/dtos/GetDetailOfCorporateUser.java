@@ -19,4 +19,7 @@ public class GetDetailOfCorporateUser {
     private Long complaintCount;
     private String color;
     private String logo;
+    private String username;
+    private String about;
+    private String type;
 }
