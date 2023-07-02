@@ -4,6 +4,7 @@ import com.kim.dibt.core.utils.result.DataResult;
 import com.kim.dibt.core.utils.result.Result;
 import com.kim.dibt.security.models.RoleType;
 import com.kim.dibt.services.user.UserService;
+import com.kim.dibt.services.user.dtos.SearchUserDto;
 import com.kim.dibt.services.user.dtos.UpdateAboutUserDto;
 import com.kim.dibt.services.user.dtos.UpdateEmailUserDto;
 import jakarta.validation.Valid;
@@ -49,6 +50,15 @@ public class UserController {
     @GetMapping("/query")
     public ResponseEntity<DataResult<List<String>>> query(@RequestParam String query) {
         var result = userService.query(query);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<DataResult<List<SearchUserDto>>> search(@RequestParam String query) {
+        var result = userService.search(query);
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
         }

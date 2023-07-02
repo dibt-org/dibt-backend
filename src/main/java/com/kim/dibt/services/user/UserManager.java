@@ -9,6 +9,7 @@ import com.kim.dibt.security.models.User;
 import com.kim.dibt.security.repo.RoleRepository;
 import com.kim.dibt.security.repo.UserRepository;
 import com.kim.dibt.services.ServiceMessages;
+import com.kim.dibt.services.user.dtos.SearchUserDto;
 import com.kim.dibt.services.user.dtos.UpdateAboutUserDto;
 import com.kim.dibt.services.user.dtos.UpdateEmailUserDto;
 import lombok.RequiredArgsConstructor;
@@ -114,6 +115,10 @@ public class UserManager implements UserService {
         return SuccessDataResult.of(this.userRepository.findUsernameByQuery(query), ServiceMessages.QUERY_SUCCESS);
     }
 
+    @Override
+    public DataResult<List<SearchUserDto>> search(String query) {
+        return SuccessDataResult.of(this.userRepository.search(query), ServiceMessages.QUERY_SUCCESS);
+    }
 
 
     @Override
