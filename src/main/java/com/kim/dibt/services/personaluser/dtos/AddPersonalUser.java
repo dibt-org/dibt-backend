@@ -15,10 +15,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddPersonalUser {
     @Size(min = 2)
-    @Pattern(regexp = "^([a-zA-ZiİçÇşŞğĞÜüÖö]*\\s*)*$\n", message = "isim sadece harflerden oluşabilir")
     private String firstName;
     @Size(min = 2)
-    @Pattern(regexp = "^([a-zA-ZiİçÇşŞğĞÜüÖö]*\\s*)*$\n", message = "soyisim sadece harflerden oluşabilir")
+//    @Pattern(regexp = "^([a-zA-ZiİçÇşŞğĞÜüÖö]*\\s*)*$\n", message = "soyisim sadece harflerden oluşabilir")
     private String lastName;
     @Size(min = 11, max = 11)
     @Pattern(regexp = "^[0-9]*$", message = "Tc kimlik numarası sadece rakamlardan oluşabilir")
