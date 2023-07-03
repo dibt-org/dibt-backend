@@ -15,15 +15,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddPersonalUser {
     @Size(min = 2)
-    @Pattern(regexp = "^[a-zA-ZiİçÇşŞğĞÜüÖö]*$", message = "Only letters are allowed")
+    @Pattern(regexp = "^([a-zA-ZiİçÇşŞğĞÜüÖö]*\\s*)*$\n", message = "isim sadece harflerden oluşabilir")
     private String firstName;
     @Size(min = 2)
-    @Pattern(regexp = "^[a-zA-ZiİçÇşŞğĞÜüÖö]*$", message = "Only letters are allowed")
+    @Pattern(regexp = "^([a-zA-ZiİçÇşŞğĞÜüÖö]*\\s*)*$\n", message = "soyisim sadece harflerden oluşabilir")
     private String lastName;
     @Size(min = 11, max = 11)
-    @Pattern(regexp = "^[0-9]*$", message = "Only numbers are allowed")
+    @Pattern(regexp = "^[0-9]*$", message = "Tc kimlik numarası sadece rakamlardan oluşabilir")
     private String nationalityId;
-    @Pattern(regexp = "^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)\\d\\d$", message = "Date format must be dd.mm.yyyy")
+    @Pattern(regexp = "^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)\\d\\d$", message = "Doğum tarihi gün.ay.yıl formatında olmalıdır")
     private String birthDate;
 
 }
