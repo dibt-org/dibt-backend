@@ -129,9 +129,9 @@ public class CorporateUserManager implements CorporateUserService {
 
     private String determineColor(long complaintCount, long totalCount) {
         if (complaintCount == 0) {
-            return "#008000"; // Yeşil
-        } else if (complaintCount <= totalCount / 8) {
             return "#006400"; // Koyu yeşil
+        } else if (complaintCount <= totalCount / 8) {
+            return "#008000"; // yeşil
         } else if (complaintCount <= totalCount / 7) {
             return "#ADFF2F"; // Yeşil sarı
         } else if (complaintCount <= totalCount / 6) {
