@@ -17,6 +17,7 @@ import com.kim.dibt.services.post.convertor.GetAllPostDtoPageConvertor;
 import com.kim.dibt.services.post.dtos.*;
 import com.kim.dibt.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -195,7 +196,8 @@ public class PostManager implements PostService {
 
     @Override
     public DataResult<List<GetAllPostDto>> getUserPosts(Long userId) {
-        List<Post> posts = postRepository.findAllByUserId(userId);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
+        List<Post> posts = postRepository.findAllByUserId(userId, sort);
         List<GetAllPostDto> getAllPostDtos = new ArrayList<>();
         posts.forEach(post -> {
             GetAllPostDto getAllPostDto = modelMapper.ofStandard().map(post, GetAllPostDto.class);

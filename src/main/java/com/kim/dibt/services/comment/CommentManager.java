@@ -74,7 +74,7 @@ public class CommentManager implements CommentService {
         Comment save = this.commentRepository.save(comment);
         AddedCommentDto addedCommentDto = modelMapper.ofStandard().map(save, AddedCommentDto.class);
         addedCommentDto.setUsername(username);
-        addedCommentDto.setCreatedDate(save.getCreatedDate().toString());
+        addedCommentDto.setCreatedDate(save.getCreatedDate() != null ? save.getCreatedDate().toString() : "");
         return SuccessDataResult.of(addedCommentDto, ServiceMessages.COMMENT_ADDED);
     }
 
@@ -101,6 +101,7 @@ public class CommentManager implements CommentService {
     private Result ifPostExists(Long postId) {
         return this.postService.isExist(postId);
     }
+
     private Result isUserHasComment(Long id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Comment comment = this.commentRepository.findById(id).orElse(null);
@@ -112,6 +113,7 @@ public class CommentManager implements CommentService {
         }
         return SuccessDataResult.of(null);
     }
+
     private Result isCommentExist(Long id) {
         if (commentRepository.findById(id).isPresent()) {
             return SuccessDataResult.of(null);
