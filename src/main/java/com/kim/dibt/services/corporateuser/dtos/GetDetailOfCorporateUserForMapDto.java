@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetDetailOfCorporateUserForMapDto {
     private Long id;
-    private Long CityId;
+    private Long cityId;
     private Long complaintCount;
 
 }

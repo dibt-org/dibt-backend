@@ -8,16 +8,9 @@ import com.kim.dibt.repo.CityRepository;
 import com.kim.dibt.repo.CorporateUserRepository;
 import com.kim.dibt.repo.MentionRepository;
 import com.kim.dibt.services.corporateuser.dtos.*;
-import kotlin.jvm.internal.SerializedIr;
 import lombok.RequiredArgsConstructor;
-import org.cloudinary.json.JSONArray;
-import org.cloudinary.json.JSONObject;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -45,4 +45,15 @@ public class MentionManager implements MentionService {
         }));
         return SuccessDataResult.of(addMentionDtos);
     }
+
+    @Override
+    public void deleteAll(List<Mention> mentions) {
+        mentionRepository.deleteAll(mentions);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        mentionRepository.deleteById(id);
+    }
 }
+
