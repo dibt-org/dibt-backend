@@ -9,6 +9,7 @@ import com.kim.dibt.models.Media;
 import com.kim.dibt.models.Mention;
 import com.kim.dibt.models.Post;
 import com.kim.dibt.repo.MediaRepository;
+import com.kim.dibt.repo.MentionRepository;
 import com.kim.dibt.repo.PostRepository;
 import com.kim.dibt.security.models.User;
 import com.kim.dibt.services.ServiceMessages;
@@ -38,6 +39,7 @@ public class PostManager implements PostService {
     private final CustomModelMapper modelMapper;
     private final GetAllPostDtoPageConvertor getAllPostDtoPageConvertor;
     private final MentionService mentionService;
+    private final MentionRepository mentionRepository;
     private final MediaUploadAdapterService mediaUploadAdapterService;
     private final MediaRepository mediaRepository;
 
@@ -154,16 +156,24 @@ public class PostManager implements PostService {
         }
 
         Post post = postRepository.findById(id).orElse(null);
+        if (post == null) {
+            return ErrorDataResult.of(null, "Post not found");
+        }
+
+        // Initialize the mentions collection eagerly
+        post.getMentions().size();
+
         postRepository.deleteById(id);
-        if (post != null && post.getMentions() != null)
-            for (int i = 0; i < post.getMentions().size(); i++) {
-                Mention mention = post.getMentions().get(i);
-                this.mentionService.delete(mention);
+        if (post.getMentions() != null) {
+            for (Mention mention : post.getMentions()) {
+                mentionRepository.deleteById(mention.getId());
             }
+        }
+
         var deletedPostDto = modelMapper.ofStandard().map(post, DeletedPostDto.class);
         return SuccessDataResult.of(deletedPostDto, ServiceMessages.POST_DELETED);
-
     }
+
 
     @Override
     public DataResult<UpdatedPostDto> update(UpdatePostDto updatePostDto, Long id) {
