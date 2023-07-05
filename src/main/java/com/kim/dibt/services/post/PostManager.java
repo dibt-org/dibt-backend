@@ -158,7 +158,7 @@ public class PostManager implements PostService {
         if (post != null && post.getMentions() != null)
             for (int i = 0; i < post.getMentions().size(); i++) {
                 Mention mention = post.getMentions().get(i);
-                this.mentionService.deleteById(mention.getId());
+                this.mentionService.delete(mention);
             }
         var deletedPostDto = modelMapper.ofStandard().map(post, DeletedPostDto.class);
         return SuccessDataResult.of(deletedPostDto, ServiceMessages.POST_DELETED);

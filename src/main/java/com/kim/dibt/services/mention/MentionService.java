@@ -11,5 +11,6 @@ public interface MentionService {
     DataResult<List<AddMentionDto>> addAll(List<String> mentions, Post post);
     void deleteAll(List<Mention> mentions);
     void deleteById(Long id);
+    void  delete(Mention mention);
 
 }

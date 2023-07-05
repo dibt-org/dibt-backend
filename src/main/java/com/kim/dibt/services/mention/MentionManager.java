@@ -55,5 +55,10 @@ public class MentionManager implements MentionService {
     public void deleteById(Long id) {
         mentionRepository.deleteById(id);
     }
+
+    @Override
+    public void delete(Mention mention) {
+        mentionRepository.delete(mention);
+    }
 }
 
