@@ -6,6 +6,7 @@ import com.kim.dibt.core.utils.business.BusinessRule;
 import com.kim.dibt.core.utils.business.CustomModelMapper;
 import com.kim.dibt.core.utils.result.*;
 import com.kim.dibt.models.Media;
+import com.kim.dibt.models.Mention;
 import com.kim.dibt.models.Post;
 import com.kim.dibt.repo.MediaRepository;
 import com.kim.dibt.repo.PostRepository;
@@ -155,7 +156,10 @@ public class PostManager implements PostService {
         Post post = postRepository.findById(id).orElse(null);
         postRepository.deleteById(id);
         if (post != null && post.getMentions() != null)
-            post.getMentions().forEach(mention -> mentionService.deleteById(mention.getId()));
+            for (int i = 0; i < post.getMentions().size(); i++) {
+                Mention mention = post.getMentions().get(i);
+                this.mentionService.deleteById(mention.getId());
+            }
         var deletedPostDto = modelMapper.ofStandard().map(post, DeletedPostDto.class);
         return SuccessDataResult.of(deletedPostDto, ServiceMessages.POST_DELETED);
 
